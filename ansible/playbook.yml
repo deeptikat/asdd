@@ -1,0 +1,27 @@
+---
+- name: Prepare a host for CampusConnect
+  hosts: campusconnect
+  become: true
+  tasks:
+    - name: Install Docker engine on Debian-based hosts
+      ansible.builtin.apt:
+        name: docker.io
+        state: present
+        update_cache: true
+      when: ansible_os_family == "Debian"
+
+    - name: Install Docker Compose plugin on Debian-based hosts
+      ansible.builtin.apt:
+        name: docker-compose-v2
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Enable and start Docker
+      ansible.builtin.service:
+        name: docker
+        enabled: true
+        state: started
+
+    - name: Explain the deployment handoff
+      ansible.builtin.debug:
+        msg: "Copy the project to this host, configure .env, then run docker compose up -d --build."

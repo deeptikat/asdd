@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: campusconnect-api
+  labels:
+    app: campusconnect-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: campusconnect-api
+  template:
+    metadata:
+      labels:
+        app: campusconnect-api
+    spec:
+      containers:
+        - name: api
+          image: campusconnect-api:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3000
+          env:
+            - name: PORT
+              value: "3000"
+            - name: DATA_DIR
+              value: /data
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+          volumeMounts:
+            - name: event-data
+              mountPath: /data
+      volumes:
+        - name: event-data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api
+spec:
+  selector:
+    app: campusconnect-api
+  ports:
+    - name: http
+      port: 3000
+      targetPort: http

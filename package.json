@@ -1,0 +1,14 @@
+{
+  "name": "campusconnect-devops",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A campus events app and end-to-end DevOps learning project.",
+  "scripts": {
+    "start": "node backend/server.js",
+    "test": "node --test",
+    "check": "node --check backend/server.js && node --check backend/store.js && node --check frontend/app.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

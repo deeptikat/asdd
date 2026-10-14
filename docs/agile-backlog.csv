@@ -1,0 +1,8 @@
+Type,Summary,Description,Acceptance Criteria,Estimate
+Epic,Campus events discovery,Enable students to find and host campus events,Search filter RSVP and create events work end to end,
+Story,Browse and filter events,As a student I want to search and filter events so I can find something relevant,Category and text filters update results,3
+Story,Reserve an event spot,As a student I want to RSVP so the organiser can track attendance,RSVP increments attendance and blocks a full event,3
+Story,Host a campus event,As an organiser I want to publish an event so students can discover it,Valid form creates a persisted event,5
+Story,Automate validation,As a contributor I want automated checks so changes are safer,Pull requests run syntax checks and API tests,3
+Story,Observe service health,As an operator I want health and metrics endpoints so I can monitor the API,Prometheus scrapes health and metrics,3
+Task,Document local container workflow,Document Compose startup and demo credentials,README contains exact local commands,1

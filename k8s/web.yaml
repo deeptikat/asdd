@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: campusconnect-web
+  labels:
+    app: campusconnect-web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: campusconnect-web
+  template:
+    metadata:
+      labels:
+        app: campusconnect-web
+    spec:
+      containers:
+        - name: web
+          image: campusconnect-web:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 2
+          resources:
+            requests:
+              cpu: 25m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: campusconnect-web
+spec:
+  selector:
+    app: campusconnect-web
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: campusconnect
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: campusconnect.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: campusconnect-web
+                port:
+                  number: 80
